@@ -309,6 +309,10 @@ git remote add upstream https://github.com/marketcalls/openalgo.git
 git remote -v
 ```
 
+> **Important: Disable GitHub Actions on Your Fork**
+>
+> After forking, go to your fork's **Settings → Actions → General** (`https://github.com/YOUR_USERNAME/openalgo/settings/actions`) and select **"Disable actions"** under Actions permissions. This prevents CI workflows (frontend builds, Docker pushes) from running on your fork unnecessarily — those workflows are only meant to run on the upstream repository.
+
 ### 2. Frontend Build Assets (Auto-Built by CI)
 
 The `/frontend/dist` folder contains pre-built frontend assets. **CI automatically rebuilds and commits these assets** when changes are merged to main.
@@ -338,6 +342,9 @@ git update-index --skip-worktree frontend/dist/*
 # Update your main branch
 git checkout main
 git pull upstream main
+
+# Restore the upstream frontend build (avoids local dist conflicts)
+git checkout frontend/dist
 
 # Create a new branch for your feature
 # Branch naming convention:
@@ -499,6 +506,35 @@ Closes #456
 ---
 
 ## Contributing Guidelines
+
+### Contribution Policy: One Feature or One Fix at a Time
+
+OpenAlgo follows a strict **incremental contribution** standard. We require all contributions to be submitted as:
+
+- **One feature** per pull request, OR
+- **One fix** per pull request
+
+**Why this matters:**
+
+OpenAlgo supports **a growing list of brokers**, and every change must be validated across this broad surface area. Large integrations submitted in a single PR require extensive manual testing and verification that is not practical for the maintainers to review all at once.
+
+Additionally, many contributions today are developed with AI assistance, which can accelerate development substantially but also increases the need for careful human review, testing, and incremental verification before acceptance into a shared upstream project.
+
+**What this means in practice:**
+
+- Break large features into small, self-contained pull requests
+- Each PR should be independently reviewable and testable
+- Submit them sequentially — wait for one to be reviewed before sending the next
+- Large monolithic PRs or full-project integrations will not be accepted in their current form
+- **Exception — New broker integrations** may be submitted as a single PR since they are self-contained within their own `broker/` directory and don't modify core platform code
+
+**If you have a large integration or project built on OpenAlgo:**
+
+We appreciate and encourage projects built on top of OpenAlgo (it's why we're open-source!). However, we cannot merge large codebases as a single contribution. Instead, extract individual improvements, fixes, or self-contained features and submit them separately. This gives each contribution a much better chance of being reviewed and accepted.
+
+This policy helps us maintain code quality, ensure stability across all broker integrations, and keep the review process manageable for our volunteer maintainers.
+
+---
 
 ### What Can You Contribute?
 
